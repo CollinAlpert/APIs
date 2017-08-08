@@ -9,8 +9,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-//add underline to text
-
 public class JLink extends JLabel {
 
     private boolean forceHTTPS = false;
