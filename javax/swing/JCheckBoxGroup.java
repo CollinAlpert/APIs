@@ -25,8 +25,7 @@ public class JCheckBoxGroup extends JPanel {
 
     @Override
     public Component add(Component comp) {
-        if (!(comp instanceof JCheckBox))
-            throw new IllegalArgumentException("Component is not a JCheckBox.");
+        if (!(comp instanceof JCheckBox)) throw new IllegalArgumentException("Component is not a JCheckBox.");
         super.add(comp);
         list.add((JCheckBox) comp);
         return comp;
