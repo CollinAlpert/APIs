@@ -31,6 +31,16 @@ public class JRadioButtonGroup extends JPanel {
         list.remove(index);
     }
 
+    public void add(JRadioButton... radioButtons) {
+        list.addAll(Arrays.asList(radioButtons));
+        Arrays.stream(radioButtons).forEach(super::add);
+    }
+
+    public void add(ArrayList<JRadioButton> radioButtons) {
+        list.addAll(radioButtons);
+        radioButtons.forEach(super::add);
+    }
+
     public JRadioButton getSelected() {
         return list.stream().filter(JRadioButton::isSelected).toArray(JRadioButton[]::new)[0];
     }

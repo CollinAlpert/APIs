@@ -31,6 +31,16 @@ public class JCheckBoxGroup extends JPanel {
         return comp;
     }
 
+    public void add(JCheckBox... checkBoxes) {
+        list.addAll(Arrays.asList(checkBoxes));
+        Arrays.stream(checkBoxes).forEach(super::add);
+    }
+
+    public void add(ArrayList<JCheckBox> checkBoxes) {
+        list.addAll(checkBoxes);
+        checkBoxes.forEach(super::add);
+    }
+
     public JCheckBox[] getSelected() {
         return list.stream().filter(JCheckBox::isSelected).toArray(JCheckBox[]::new);
     }
@@ -38,5 +48,4 @@ public class JCheckBoxGroup extends JPanel {
     public String[] getSelectedValues() {
         return list.stream().filter(JCheckBox::isSelected).map(JCheckBox::getText).toArray(String[]::new);
     }
-
 }
