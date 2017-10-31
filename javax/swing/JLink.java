@@ -67,7 +67,7 @@ public class JLink extends JLabel {
             else if (!link.startsWith("http")) return "https://" + link;
             else return link;
         } else if (!link.startsWith("http")) return "http://" + link;
-        else return link;
+        return link;
     }
 
     public void setColor(Color color) {
