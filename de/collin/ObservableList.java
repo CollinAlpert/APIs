@@ -30,14 +30,16 @@ public class ObservableList<T> extends ArrayList<T> {
     @Override
     public boolean add(T element) {
         super.add(element);
-        addListener.accept(element);
+        if (addListener != null)
+            addListener.accept(element);
         return true;
     }
 
     @Override
     public T remove(int index) {
         T returnValue = this.get(index);
-        removeListener.accept(returnValue);
+        if (removeListener != null)
+            removeListener.accept(returnValue);
         super.remove(index);
         return returnValue;
     }
