@@ -1,3 +1,5 @@
+package de.collin;
+
 import java.sql.*;
 
 /**
