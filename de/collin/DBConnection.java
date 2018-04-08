@@ -75,7 +75,7 @@ public class DBConnection {
     }
 
     /**
-     * This command is used for any querys that are supposed to update the database, such as UPDATE, DELETE, TRUNCATE etc.
+     * This command is used for any queries that are supposed to update the database, such as UPDATE, DELETE, TRUNCATE etc.
      * @param query The query to be executed.
      */
     public void update(String query) {
@@ -88,7 +88,7 @@ public class DBConnection {
     }
 
     /**
-     * This command is used for any querys that are supposed to update the database, such as UPDATE, DELETE, TRUNCATE etc.
+     * This command is used for any queries that are supposed to update the database, such as UPDATE, DELETE, TRUNCATE etc.
      * @param query The query to be executed.
      * @param params The Java parameters to be inserted into the query.
      */
