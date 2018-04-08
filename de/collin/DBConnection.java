@@ -1,5 +1,6 @@
 package de.collin;
 
+import javax.swing.*;
 import java.sql.*;
 
 /**
@@ -15,14 +16,17 @@ public class DBConnection {
     private Connection connection = null;
     private boolean isConnectionValid = false;
 
-    public DBConnection() throws SQLException {
+    public DBConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             DriverManager.setLoginTimeout(5);
-            connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database, username, password);
+            connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?autoReconnect=true", username, password);
             isConnectionValid = true;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Die Datenbank ist nicht online!", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         }
     }
 

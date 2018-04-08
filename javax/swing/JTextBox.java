@@ -1,5 +1,6 @@
 package javax.swing;
 
+import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -9,13 +10,15 @@ public class JTextBox extends JTextField {
     private String promptText = null;
     private boolean isPromptText;
 
+    private final Highlighter defaultHighlighter = this.getHighlighter();
+
     public JTextBox(String text, boolean isPromptText) {
         super();
 
         super.setSelectionStart(0);
         super.setSelectionEnd(0);
 
-        this.setIsPrompText(isPromptText);
+        this.setIsPromptText(isPromptText);
         if (isPromptText) {
             this.setPromptText(text);
         }
@@ -23,59 +26,60 @@ public class JTextBox extends JTextField {
         this.setText(isPromptText ? "" : text);
         super.setText(text);
 
+        this.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (isPromptText()) {
+                    JTextBox.this.setCaretPosition(0);
+                }
+            }
+        });
+
         this.addKeyListener(new KeyAdapter() {
 
             @Override
-            public void keyPressed(KeyEvent e) {
-                boolean canResetPrompt = JTextBox.this.getCaretPosition() <= 0 &&
-                        (e.getExtendedKeyCode() == KeyEvent.VK_DELETE || e.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE);
-
-                if (JTextBox.this.isPromptText() && !isArrowKey(e)) {
+            public void keyTyped(KeyEvent e) {
+                if (isPromptText() && !e.isActionKey() && !isDeleteKey(e) && !isModifierKey(e)) {
                     JTextBox.this.setText("");
-                    JTextBox.this.setIsPrompText(false);
+                    JTextBox.this.setIsPromptText(false);
                 }
+            }
 
-                if (canResetPrompt) {
-                    JTextBox.this.setIsPrompText(true);
-                    JTextBox.this.setText(JTextBox.this.getPromptText());
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (isPromptText() && e.isActionKey()) {
+                    e.consume();
                 }
-
-                if (JTextBox.this.isPromptText() && isArrowKey(e))
-                    JTextBox.this.setCaretPosition(-1);
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (JTextBox.this.isPromptText() && isArrowKey(e))
+                boolean canResetPrompt = getText().length() < 1 && isDeleteKey(e);
+
+                if (canResetPrompt) {
+                    JTextBox.this.setIsPromptText(true);
+                    JTextBox.this.setText(JTextBox.this.getPromptText());
                     JTextBox.this.setCaretPosition(0);
+                }
             }
         });
 
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (JTextBox.this.isPromptText())
-                    JTextBox.this.setCaretPosition(0);
-
-                if (JTextBox.this.isPromptText() && e.getClickCount() > 1)
+                if (isPromptText() || (isPromptText() && e.getClickCount() > 1))
                     JTextBox.this.setCaretPosition(0);
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (JTextBox.this.isPromptText())
-                    JTextBox.this.setCaretPosition(0);
-
-                if (JTextBox.this.isPromptText() && e.getClickCount() > 1)
+                if (isPromptText() || (isPromptText() && e.getClickCount() > 1))
                     JTextBox.this.setCaretPosition(0);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (JTextBox.this.isPromptText())
-                    JTextBox.this.setCaretPosition(0);
-
-                if (JTextBox.this.isPromptText() && e.getClickCount() > 1)
+                if (isPromptText() || (isPromptText() && e.getClickCount() > 1))
                     JTextBox.this.setCaretPosition(0);
             }
         });
@@ -83,11 +87,6 @@ public class JTextBox extends JTextField {
 
     public JTextBox(String text) {
         this(text, false);
-    }
-
-    @Override
-    public String getText() {
-        return text;
     }
 
     @Override
@@ -104,19 +103,21 @@ public class JTextBox extends JTextField {
         this.promptText = promptText;
     }
 
-    public void setIsPrompText(boolean isPrompText) {
-        this.isPromptText = isPrompText;
-        super.setForeground(isPrompText ? Color.gray : Color.black);
+    public void setIsPromptText(boolean isPromptText) {
+        this.isPromptText = isPromptText;
+        this.setHighlighter(isPromptText ? null : defaultHighlighter);
+        super.setForeground(isPromptText ? Color.gray : Color.black);
     }
 
     public boolean isPromptText() {
         return this.isPromptText;
     }
 
-    private boolean isArrowKey(KeyEvent e) {
-        return e.getExtendedKeyCode() == KeyEvent.VK_UP ||
-                e.getExtendedKeyCode() == KeyEvent.VK_DOWN ||
-                e.getExtendedKeyCode() == KeyEvent.VK_LEFT ||
-                e.getExtendedKeyCode() == KeyEvent.VK_RIGHT;
+    private boolean isModifierKey(KeyEvent event) {
+        return event.isAltDown() || event.isShiftDown() || event.isControlDown() || event.isMetaDown() || event.isAltGraphDown();
+    }
+
+    private boolean isDeleteKey(KeyEvent e) {
+        return e.getExtendedKeyCode() == KeyEvent.VK_DELETE || e.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE;
     }
 }
