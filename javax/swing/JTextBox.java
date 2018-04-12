@@ -90,6 +90,12 @@ public class JTextBox extends JTextField {
     }
 
     @Override
+    public String getText() {
+        if (!isPromptText()) return super.getText();
+        return "";
+    }
+
+    @Override
     public void setText(String text) {
         this.text = text;
         super.setText(text);
@@ -114,7 +120,7 @@ public class JTextBox extends JTextField {
     }
 
     private boolean isModifierKey(KeyEvent event) {
-        return event.isAltDown() || event.isShiftDown() || event.isControlDown() || event.isMetaDown() || event.isAltGraphDown();
+        return event.isAltDown() || event.isControlDown() || event.isMetaDown() || event.isAltGraphDown();
     }
 
     private boolean isDeleteKey(KeyEvent e) {
