@@ -7,7 +7,7 @@ import java.sql.*;
  * @author Collin Alpert
  * @see <a href="https://github.com/CollinAlpert/APIs/blob/master/de/collin/DBConnection.java">GitHub</a>
  */
-public class DBConnection {
+public class DBConnection implements AutoCloseable {
 
     private final String host = "";
     private final String database = "";
@@ -102,5 +102,14 @@ public class DBConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Implements close action for when used in a disposable try block.
+     * @throws Exception when connection can't be closed.
+     */
+    @Override
+    public void close() throws Exception {
+        connection.close();
     }
 }
