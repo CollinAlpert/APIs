@@ -106,10 +106,15 @@ public class DBConnection implements AutoCloseable {
 
     /**
      * Implements close action for when used in a disposable try block.
-     * @throws Exception when connection can't be closed.
      */
     @Override
-    public void close() throws Exception {
-        connection.close();
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            System.err.println("Could not close database connection");
+        } finally {
+            isConnectionValid = false;
+        }
     }
 }
