@@ -104,19 +104,20 @@ public class DBConnection implements AutoCloseable {
         }
     }
 
-    /**
-     * Determines if a connection to the database still exists or not.
-     * @return <code>True</code> if a connection exists, <code>false</code> if not.
-     * This method will return <code>false</code> if an exception occurs.
-     */
-    public boolean isOpen() {
-        try {
-            return connection.isClosed();
-        } catch (SQLException e) {
-            System.err.println("Could not determine connection status");
-            return false;
-        }
-    }
+	/**
+	 * Determines if a connection to the database still exists or not.
+	 * @return <code>True</code> if a connection exists, <code>false</code> if not.
+	 * This method will return <code>false</code> if an exception occurs.
+	 */
+	public boolean isOpen() {
+		try {
+			return !connection.isClosed();
+		} catch (SQLException e) {
+			System.err.println("Could not determine connection status");
+			isConnectionValid = false;
+			return false;
+		}
+	}
 
     /**
      * Implements close action for when used in a disposable try block.
