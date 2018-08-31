@@ -3,18 +3,18 @@ package javax.swing;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class JCheckBoxGroup extends JPanel {
 
     private ArrayList<JCheckBox> list = new ArrayList<>();
 
     public JCheckBoxGroup(JCheckBox... checkBoxes) {
-        Arrays.stream(checkBoxes).forEach(this::add);
+        for (JCheckBox box : checkBoxes) this.add(box);
         list.addAll(Arrays.asList(checkBoxes));
     }
 
     public JCheckBoxGroup() {
-
     }
 
     @Override

@@ -11,89 +11,111 @@ import java.util.Map;
 
 public class JLink extends JLabel {
 
-    private boolean forceHTTPS = false;
-    private String link;
-    private Color color = Color.blue;
-    private Color clickColor = new Color(0, 0, 150);
-    private Color hoverColor = Color.black;
-    private Cursor hoverCursor = new Cursor(Cursor.HAND_CURSOR);
+	private boolean forceHTTPS = false;
+	private String link;
+	private Color color = Color.blue;
+	private Color clickColor = new Color(0, 0, 150);
+	private Color hoverColor = Color.black;
+	private Cursor hoverCursor = new Cursor(Cursor.HAND_CURSOR);
 
 
-    @SuppressWarnings("unchecked")
-    public JLink(String link, String text, boolean underline) {
-        super(text);
-        this.setForeground(this.color);
-        this.setToolTipText(link);
-        this.link = link;
-        if (underline) {
-            Font font = this.getFont();
-            Map<TextAttribute, Integer> attributes = (Map<TextAttribute, Integer>) font.getAttributes();
-            attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-            this.setFont(font.deriveFont(attributes));
-        }
-        this.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    Desktop.getDesktop().browse(new URI(format(JLink.this.link)));
-                } catch (URISyntaxException | IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
+	@SuppressWarnings("unchecked")
+	public JLink(String link, String text, boolean underline) {
+		super(text);
+		this.setForeground(this.color);
+		this.setToolTipText(link);
+		this.link = link;
+		if (underline) {
+			Font font = this.getFont();
+			Map<TextAttribute, Integer> attributes = (Map<TextAttribute, Integer>) font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+			this.setFont(font.deriveFont(attributes));
+		}
+		this.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				try {
+					Desktop.getDesktop().browse(new URI(format(JLink.this.link)));
+				} catch (URISyntaxException | IOException e1) {
+					e1.printStackTrace();
+				}
+			}
 
-            public void mousePressed(MouseEvent e) {
-                JLink.this.setForeground(JLink.this.clickColor);
-            }
+			public void mousePressed(MouseEvent e) {
+				JLink.this.setForeground(JLink.this.clickColor);
+			}
 
-            public void mouseReleased(MouseEvent e) {
-                JLink.this.setForeground(JLink.this.color);
-            }
+			public void mouseReleased(MouseEvent e) {
+				JLink.this.setForeground(JLink.this.color);
+			}
 
-            public void mouseEntered(MouseEvent e) {
-                JLink.this.setForeground(JLink.this.hoverColor);
-                JLink.this.setCursor(JLink.this.hoverCursor);
-            }
+			public void mouseEntered(MouseEvent e) {
+				JLink.this.setForeground(JLink.this.hoverColor);
+				JLink.this.setCursor(JLink.this.hoverCursor);
+			}
 
-            public void mouseExited(MouseEvent e) {
-                JLink.this.setForeground(JLink.this.color);
-                JLink.this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            }
-        });
-    }
+			public void mouseExited(MouseEvent e) {
+				JLink.this.setForeground(JLink.this.color);
+				JLink.this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+		});
+	}
 
-    private String format(String link) {
-        if (forceHTTPS) {
-            if (link.startsWith("http://"))
-                return "https://" + link.substring(7);
-            else if (!link.startsWith("http")) return "https://" + link;
-            else return link;
-        } else if (!link.startsWith("http")) return "http://" + link;
-        return link;
-    }
+	private String format(String link) {
+		if (forceHTTPS) {
+			if (link.startsWith("http://"))
+				return "https://" + link.substring(7);
+			else if (!link.startsWith("http")) return "https://" + link;
+			else return link;
+		} else if (!link.startsWith("http")) return "http://" + link;
+		return link;
+	}
 
-    public void setColor(Color color) {
-        this.color = color;
-        this.setForeground(this.color);
-    }
+	public void forceHTTPS(boolean force) {
+		this.forceHTTPS = force;
+	}
 
-    public void setClickColor(Color color) {
-        this.clickColor = color;
-    }
+	public boolean isForceHTTPS() {
+		return forceHTTPS;
+	}
 
-    public void setHoverColor(Color color) {
-        this.hoverColor = color;
-    }
+	public String getLink() {
+		return link;
+	}
 
-    public void setHoverCursor(Cursor cursor) {
-        this.hoverCursor = cursor;
-    }
+	public void setLink(String link) {
+		this.link = link;
+	}
 
-    public void setLink(String link) {
-        this.link = link;
-    }
+	public Color getColor() {
+		return color;
+	}
 
-    public void forceHTTPS(boolean force) {
-        this.forceHTTPS = force;
-    }
+	public void setColor(Color color) {
+		this.color = color;
+		this.setForeground(this.color);
+	}
 
+	public Color getClickColor() {
+		return clickColor;
+	}
 
+	public void setClickColor(Color color) {
+		this.clickColor = color;
+	}
+
+	public Color getHoverColor() {
+		return hoverColor;
+	}
+
+	public void setHoverColor(Color color) {
+		this.hoverColor = color;
+	}
+
+	public Cursor getHoverCursor() {
+		return hoverCursor;
+	}
+
+	public void setHoverCursor(Cursor cursor) {
+		this.hoverCursor = cursor;
+	}
 }

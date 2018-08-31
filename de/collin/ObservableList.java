@@ -10,20 +10,14 @@ public class ObservableList<T> extends ArrayList<T> {
 	private Consumer<T> removeListener;
 
 	public ObservableList() {
-		addListener = null;
-		removeListener = null;
 	}
 
 	@SafeVarargs
 	public ObservableList(T... elements) {
-		addListener = null;
-		removeListener = null;
 		Collections.addAll(this, elements);
 	}
 
 	public ObservableList(ArrayList<T> elements) {
-		addListener = null;
-		removeListener = null;
 		this.addAll(elements);
 	}
 
@@ -37,10 +31,9 @@ public class ObservableList<T> extends ArrayList<T> {
 
 	@Override
 	public T remove(int index) {
-		T returnValue = this.get(index);
+		T returnValue = super.remove(index);
 		if (removeListener != null)
 			removeListener.accept(returnValue);
-		super.remove(index);
 		return returnValue;
 	}
 

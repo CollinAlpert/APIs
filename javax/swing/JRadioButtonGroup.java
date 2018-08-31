@@ -9,11 +9,11 @@ public class JRadioButtonGroup extends JPanel {
     private ArrayList<JRadioButton> list = new ArrayList<>();
 
     public JRadioButtonGroup(JRadioButton... rbs) {
-        Arrays.stream(rbs).forEach(this::add);
+        for (JRadioButton b : rbs) this.add(b);
+        list.addAll(Arrays.asList(rbs));
     }
 
     public JRadioButtonGroup() {
-
     }
 
     @Override
