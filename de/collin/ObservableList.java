@@ -129,7 +129,7 @@ public class ObservableList<T> extends ArrayList<T> {
 		if (this.addListener == null) {
 			this.addListener = addListener;
 		}
-		else this.addListener.andThen(addListener);
+		else this.addListener = this.addListener.andThen(addListener);
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class ObservableList<T> extends ArrayList<T> {
 		if (this.removeListener == null) {
 			this.removeListener = removeListener;
 		}
-		else this.removeListener.andThen(removeListener);
+		else this.removeListener = this.removeListener.andThen(removeListener);
 	}
 
 	/**
