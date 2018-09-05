@@ -3,17 +3,20 @@ package javax.swing;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class JRadioButtonGroup extends JPanel {
 
-    private ArrayList<JRadioButton> list = new ArrayList<>();
+    private List<JRadioButton> list;
 
     public JRadioButtonGroup(JRadioButton... rbs) {
+        this();
         for (JRadioButton b : rbs) this.add(b);
         list.addAll(Arrays.asList(rbs));
     }
 
     public JRadioButtonGroup() {
+        list = new ArrayList<>();
     }
 
     @Override

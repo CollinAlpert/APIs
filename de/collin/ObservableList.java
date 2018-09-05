@@ -126,8 +126,9 @@ public class ObservableList<T> extends ArrayList<T> {
 	 * @param addListener The {@link Consumer<T>} to be added.
 	 */
 	public void addAddListener(Consumer<T> addListener) {
-		if (this.addListener == null)
+		if (this.addListener == null) {
 			this.addListener = addListener;
+		}
 		else this.addListener.andThen(addListener);
 	}
 
@@ -137,8 +138,9 @@ public class ObservableList<T> extends ArrayList<T> {
 	 * @param removeListener The {@link Consumer<T>} to be added.
 	 */
 	public void addRemoveListener(Consumer<T> removeListener) {
-		if (this.removeListener == null)
+		if (this.removeListener == null) {
 			this.removeListener = removeListener;
+		}
 		else this.removeListener.andThen(removeListener);
 	}
 
