@@ -1,8 +1,10 @@
 package de.collin.stack;
 
 /**
- * @author Collin Alpert
+ * A class which represents an element in a stack and includes a reference to the next element, as per linked list approach.
+ *
  * @param <T> The type of the stack element.
+ * @author Collin Alpert
  * @see de.collin.stack.LinkedListStack
  */
 public class LinkedListStackElement<T> {
@@ -24,6 +26,7 @@ public class LinkedListStackElement<T> {
 
 	/**
 	 * Constructor for creating an element that represents the last element of a stack with the given value.
+	 *
 	 * @param value The value of this element.
 	 */
 	public LinkedListStackElement(T value) {
@@ -40,6 +43,7 @@ public class LinkedListStackElement<T> {
 
 	/**
 	 * Sets the reference to the next element in the stack.
+	 *
 	 * @param next The next element in the stack.
 	 */
 	public void setNext(LinkedListStackElement<T> next) {
