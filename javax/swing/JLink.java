@@ -9,17 +9,34 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+/**
+ * A custom Swing component representing a clickable internet link.
+ *
+ * @author Collin Alpert
+ * @see javax.swing.JLabel
+ */
 public class JLink extends JLabel {
 
+	/**
+	 * Determines if the link will force the HTTPS protocol when clicked.
+	 */
 	private boolean forceHTTPS = false;
 	private String link;
 	private Color color = Color.blue;
+	/**
+	 * The color the link will be in the moment it is clicked.
+	 */
 	private Color clickColor = new Color(0, 0, 150);
 	private Color hoverColor = Color.black;
 	private Cursor hoverCursor = new Cursor(Cursor.HAND_CURSOR);
 
-
-	@SuppressWarnings("unchecked")
+	/**
+	 * Constructor for creating a link component.
+	 *
+	 * @param link      The URL that will be opened in the browser when this link is clicked.
+	 * @param text      The text to be displayed.
+	 * @param underline Determines if the link will be underlined or not.
+	 */
 	public JLink(String link, String text, boolean underline) {
 		super(text);
 		this.setForeground(this.color);
