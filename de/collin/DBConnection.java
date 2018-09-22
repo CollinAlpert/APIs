@@ -1,8 +1,10 @@
 package de.collin;
 
+import com.mysql.cj.exceptions.CJCommunicationsException;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,14 +14,15 @@ import java.sql.Statement;
  * @see <a href="https://github.com/CollinAlpert/APIs/blob/master/de/collin/DBConnection.java">GitHub</a>
  */
 public class DBConnection implements AutoCloseable {
-
 	public static String HOST;
 	public static String DATABASE;
 	public static String USERNAME;
 	public static String PASSWORD;
 	public static DatabaseTypes DATABASE_TYPE;
 	public static int PORT;
-	private Connection connection = null;
+	public static boolean LOG_QUERIES = true;
+
+	private Connection connection;
 	private boolean isConnectionValid;
 
 	public DBConnection() {
@@ -28,54 +31,37 @@ public class DBConnection implements AutoCloseable {
 			String connectionString;
 			if (PORT == 0) {
 				switch (DATABASE_TYPE) {
-					default:
-					case MYSQL:
-						PORT = 3306;
-						break;
 					case MICROSOFT:
 						PORT = 1433;
 						break;
-					case ORACLE:
-						PORT = 1521;
+					case MYSQL:
+					default:
+						PORT = 3306;
 						break;
 				}
 			}
 			switch (DATABASE_TYPE) {
-				default:
-				case MYSQL:
-					driver = "com.mysql.cj.jdbc.Driver";
-					connectionString = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?serverTimezone=UTC";
-					break;
-				case ORACLE:
-					driver = "oracle.jdbc.driver.OracleDriver";
-					connectionString = "jdbc:oracle:thin:@" + HOST + ":" + PORT + ":orcl";
-					//Requires the Oracle JDBC driver library.
-					//Delete this block if not needed
-					OracleDataSource source = new OracleDataSource();
-					source.setDatabaseName(SystemParameter.DATABASE);
-					source.setURL(connectionString);
-					source.setUser(SystemParameter.USERNAME);
-					source.setPassword(SystemParameter.PASSWORD);
-					connection = source.getConnection();
-					break;
 				case MICROSOFT:
 					driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 					connectionString = "jdbc:sqlserver://" + HOST + ":" + PORT + ";databaseName=" + DATABASE;
 					break;
+				case MYSQL:
+				default:
+					driver = "com.mysql.cj.jdbc.Driver";
+					connectionString = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?serverTimezone=UTC";
+					break;
 			}
 			Class.forName(driver);
 			DriverManager.setLoginTimeout(5);
-			if (connection == null) {
-				connection = DriverManager.getConnection(connectionString, USERNAME, PASSWORD);
-			}
+			connection = DriverManager.getConnection(connectionString, USERNAME, PASSWORD);
 			isConnectionValid = true;
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-			isConnectionValid = false;
-		} catch (Exception e) {
+		} catch (CJCommunicationsException | CommunicationsException e) {
 			System.err.println("The connection to the database failed. Please check if the MySQL server is reachable and if you have an internet connection.");
 			isConnectionValid = false;
 			System.exit(1);
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			isConnectionValid = false;
 		}
 	}
 
@@ -93,16 +79,14 @@ public class DBConnection implements AutoCloseable {
 	 * Executes a DQL statement on the database without Java parameters.
 	 *
 	 * @param query The query to be executed.
-	 * @return The <code>ResultSet</code> containing the result from the SELECT query.
+	 * @return The {@link ResultSet} containing the result from the SELECT query.
+	 * @throws SQLException if the query is malformed or cannot be executed.
 	 */
-	public ResultSet execute(String query) {
-		try {
-			Statement statement = connection.createStatement();
-			return statement.executeQuery(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public ResultSet execute(String query) throws SQLException {
+		Statement statement = connection.createStatement();
+		var set = statement.executeQuery(query);
+		statement.closeOnCompletion();
+		return set;
 	}
 
 	/**
@@ -110,70 +94,65 @@ public class DBConnection implements AutoCloseable {
 	 *
 	 * @param query  The query to be executed.
 	 * @param params The Java parameters to be inserted into the query.
-	 * @return The <code>ResultSet</code> containing the result from the SELECT query.
+	 * @return The {@link ResultSet} containing the result from the SELECT query.
+	 * @throws SQLException if the query is malformed or cannot be executed.
 	 */
-	public ResultSet execute(String query, Object... params) {
-		try {
-			PreparedStatement statement = connection.prepareStatement(query);
-			for (int i = 0; i < params.length; i++) {
-				statement.setObject(i + 1, params[i]);
-			}
-			return statement.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+	public ResultSet execute(String query, Object... params) throws SQLException {
+		var statement = connection.prepareStatement(query);
+		for (int i = 0; i < params.length; i++) {
+			statement.setObject(i + 1, params[i]);
 		}
+		var set = statement.executeQuery();
+		statement.closeOnCompletion();
+		return set;
 	}
 
 	/**
-	 * Executes a DML or DDL statement on the database without Java parameters.
+	 * This command is used for any DDL/DML queries.
 	 *
 	 * @param query The query to be executed.
+	 * @throws SQLException if the query is malformed or cannot be executed.
 	 */
-	public void update(String query) {
-		try {
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void update(String query) throws SQLException {
+		var statement = connection.createStatement();
+		statement.executeUpdate(query);
+		statement.closeOnCompletion();
 	}
 
 	/**
-	 * Executes a DML or DDL statement on the database with Java parameters.
+	 * This command is used for any DDL/DML queries with Java parameters.
 	 *
 	 * @param query  The query to be executed.
 	 * @param params The Java parameters to be inserted into the query.
+	 * @throws SQLException if the query is malformed or cannot be executed.
 	 */
-	public void update(String query, Object... params) {
-		try {
-			PreparedStatement statement = connection.prepareStatement(query);
-			for (int i = 0; i < params.length; i++) {
-				statement.setObject(i + 1, params[i]);
-			}
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
+	public void update(String query, Object... params) throws SQLException {
+		var statement = connection.prepareStatement(query);
+		for (int i = 0; i < params.length; i++) {
+			statement.setObject(i + 1, params[i]);
 		}
+		statement.executeUpdate();
+		statement.closeOnCompletion();
 	}
 
 	/**
 	 * Determines if a connection to the database still exists or not.
 	 *
-	 * @return <code>True</code> if a connection exists, <code>false</code> if not.
-	 * This method will return <code>false</code> if an exception occurs.
+	 * @return {@code True} if a connection exists, {@code false} if not.
+	 * This method will return {@code false} if an exception occurs.
 	 */
 	public boolean isOpen() {
 		try {
 			return !connection.isClosed();
 		} catch (SQLException e) {
 			System.err.println("Could not determine connection status");
+			isConnectionValid = false;
 			return false;
 		}
 	}
 
 	/**
-	 * Implements close action for when used in a disposable try block.
+	 * Closes the connection to the database.
 	 */
 	@Override
 	public void close() {
@@ -187,6 +166,6 @@ public class DBConnection implements AutoCloseable {
 	}
 
 	public enum DatabaseTypes {
-		MYSQL, ORACLE, MICROSOFT
+		MYSQL, MICROSOFT
 	}
 }
