@@ -7,15 +7,14 @@ import java.util.EmptyStackException;
  *
  * @param <T> The type of the Stack.
  * @author Collin Alpert
- * @see de.collin.stack.Stackable
- * @see de.collin.stack.LinkedListStackElement
+ * @see LinkedListStackElement
  */
-public class LinkedListStack<T> implements Stackable<T> {
+public class LinkedListStack<T> {
 
 	/**
 	 * Element representing the head of the stack and the entry point for finding other elements.
 	 */
-	private LinkedListStackElement<T> head;
+	private LinkedListStackElement head;
 	private int elementCount;
 
 	/**
@@ -30,11 +29,8 @@ public class LinkedListStack<T> implements Stackable<T> {
 	 *
 	 * @param element The element to be added.
 	 */
-	@Override
 	public void push(T element) {
-		LinkedListStackElement<T> newElement = new LinkedListStackElement<>(element);
-		newElement.setNext(head);
-		head = newElement;
+		head = new LinkedListStackElement(head, element);
 		elementCount++;
 	}
 
@@ -43,12 +39,11 @@ public class LinkedListStack<T> implements Stackable<T> {
 	 *
 	 * @return The top element on the stack.
 	 */
-	@Override
 	public T pop() {
 		if (isEmpty()) {
 			throw new EmptyStackException();
 		}
-		LinkedListStackElement<T> firstElement = head;
+		LinkedListStackElement firstElement = head;
 		head = head.getNext();
 		elementCount--;
 		return firstElement.getValue();
@@ -59,7 +54,6 @@ public class LinkedListStack<T> implements Stackable<T> {
 	 *
 	 * @return The first element on the stack.
 	 */
-	@Override
 	public T top() {
 		if (isEmpty()) {
 			throw new EmptyStackException();
@@ -72,7 +66,6 @@ public class LinkedListStack<T> implements Stackable<T> {
 	 *
 	 * @return <code>True</code> if there are elements in the stack, otherwise <code>false</code>.
 	 */
-	@Override
 	public boolean isEmpty() {
 		return elementCount == 0;
 	}
@@ -80,8 +73,47 @@ public class LinkedListStack<T> implements Stackable<T> {
 	/**
 	 * @return the number of elements in this stack.
 	 */
-	@Override
 	public int size() {
 		return elementCount;
+	}
+
+	/**
+	 * A class which represents an element in a stack and includes a reference to the next element, as per linked list approach.
+	 *
+	 * @author Collin Alpert
+	 * @see de.collin.stack.LinkedListStack
+	 */
+	private class LinkedListStackElement {
+
+		/**
+		 * Reference to the next element in the stack.
+		 */
+		private LinkedListStackElement next;
+		private T value;
+
+		/**
+		 * Consructor for creating an element with a value and a reference to the next element in the stack.
+		 *
+		 * @param next  The next element in the stack.
+		 * @param value This element's value.
+		 */
+		public LinkedListStackElement(LinkedListStackElement next, T value) {
+			this.next = next;
+			this.value = value;
+		}
+
+		/**
+		 * @return the reference to the next element in the stack.
+		 */
+		public LinkedListStackElement getNext() {
+			return next;
+		}
+
+		/**
+		 * @return the value of this element.
+		 */
+		public T getValue() {
+			return value;
+		}
 	}
 }
