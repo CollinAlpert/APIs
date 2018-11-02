@@ -7,9 +7,8 @@ import java.util.EmptyStackException;
  *
  * @param <T> The type of the Stack.
  * @author Collin Alpert
- * @see de.collin.stack.Stackable
  */
-public class FixedCapacityStack<T> implements Stackable<T> {
+public class FixedCapacityStack<T> {
 
 	private T[] data;
 	private int head;
@@ -40,7 +39,6 @@ public class FixedCapacityStack<T> implements Stackable<T> {
 	 *
 	 * @param element The element to be added.
 	 */
-	@Override
 	public void push(T element) {
 		if (head == data.length - 1) {
 			throw new RuntimeException("Stack is full.");
@@ -54,7 +52,6 @@ public class FixedCapacityStack<T> implements Stackable<T> {
 	 *
 	 * @return The top element on the stack.
 	 */
-	@Override
 	public T pop() {
 		if (isEmpty()) {
 			throw new EmptyStackException();
@@ -70,7 +67,6 @@ public class FixedCapacityStack<T> implements Stackable<T> {
 	 *
 	 * @return The first element on the stack.
 	 */
-	@Override
 	public T top() {
 		if (isEmpty()) {
 			throw new EmptyStackException();
@@ -83,7 +79,6 @@ public class FixedCapacityStack<T> implements Stackable<T> {
 	 *
 	 * @return <code>True</code> if there are elements in the stack, otherwise <code>false</code>.
 	 */
-	@Override
 	public boolean isEmpty() {
 		return head == -1;
 	}
@@ -91,7 +86,6 @@ public class FixedCapacityStack<T> implements Stackable<T> {
 	/**
 	 * @return the number of elements in this stack.
 	 */
-	@Override
 	public int size() {
 		return head + 1;
 	}

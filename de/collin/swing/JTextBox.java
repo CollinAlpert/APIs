@@ -1,5 +1,6 @@
-package javax.swing;
+package de.collin.swing;
 
+import javax.swing.*;
 import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
