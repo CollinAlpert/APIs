@@ -1,4 +1,4 @@
-package de.collin;
+package com.github.collinalpert.apis.datastructures;
 
 public class Tuple {
 

@@ -1,4 +1,4 @@
-package de.collin;
+package com.github.collinalpert.apis.datastructures;
 
 import java.util.ArrayList;
 import java.util.Collections;

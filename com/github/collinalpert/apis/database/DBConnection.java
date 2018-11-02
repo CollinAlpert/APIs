@@ -1,4 +1,4 @@
-package de.collin;
+package com.github.collinalpert.apis.database;
 
 import com.mysql.cj.exceptions.CJCommunicationsException;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;

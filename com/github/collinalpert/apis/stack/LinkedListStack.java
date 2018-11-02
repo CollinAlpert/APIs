@@ -1,4 +1,4 @@
-package de.collin.stack;
+package com.github.collinalpert.apis.stack;
 
 import java.util.EmptyStackException;
 
@@ -81,7 +81,7 @@ public class LinkedListStack<T> {
 	 * A class which represents an element in a stack and includes a reference to the next element, as per linked list approach.
 	 *
 	 * @author Collin Alpert
-	 * @see de.collin.stack.LinkedListStack
+	 * @see LinkedListStack
 	 */
 	private class LinkedListStackElement {
 

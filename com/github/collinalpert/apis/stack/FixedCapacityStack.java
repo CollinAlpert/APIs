@@ -1,4 +1,4 @@
-package de.collin.stack;
+package com.github.collinalpert.apis.stack;
 
 import java.util.EmptyStackException;
 

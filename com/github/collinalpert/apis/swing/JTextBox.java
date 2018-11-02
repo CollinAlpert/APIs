@@ -1,4 +1,4 @@
-package de.collin.swing;
+package com.github.collinalpert.apis.swing;
 
 import javax.swing.*;
 import javax.swing.text.Highlighter;
